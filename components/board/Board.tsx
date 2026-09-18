@@ -2,11 +2,12 @@
 
 import { useReducer, useEffect, useState, useMemo } from "react";
 import { boardReducer } from "@/lib/boardReducer";
-import { loadInitialBoard } from "@/lib/boardStorage";
 import { cardMatches } from "@/lib/matching";
 import { useDragAndDrop } from "@/hooks/useDragAndDrop";
 import { useBoardPersistence } from "@/hooks/useBoardPersistence";
 import { useKeyboardMove } from "@/hooks/useKeyboardMove";
+import { createDefaultBoardState } from "@/lib/boardStorage";
+import { useBoardHydration } from "@/hooks/useBoardHydration";
 import Column from "./Column";
 import AddColumnForm from "./AddColumnForm";
 import UndoRedoControls from "./UndoRedoControls";
@@ -14,18 +15,20 @@ import LiveRegion from "./LiveRegion";
 import FilterBar from "./FilterBar";
 
 export default function Board() {
-  const [board, dispatch] = useReducer(
-    boardReducer,
-    undefined,
-    loadInitialBoard,
-  );
-  const { dragState, startDrag, endDrag, setHover, clearHover } =
-    useDragAndDrop();
-  const { announcement } = useKeyboardMove(board, dispatch);
+   const [board, dispatch] = useReducer(
+     boardReducer,
+     undefined,
+     createDefaultBoardState,
+   );
+   const { dragState, startDrag, endDrag, setHover, clearHover } =
+     useDragAndDrop();
+   const { announcement } = useKeyboardMove(board, dispatch);
 
   const [search, setSearch] = useState("");
   const [activeLabel, setActiveLabel] = useState<string | null>(null);
 
+  useBoardPersistence(board);
+  useBoardHydration(dispatch);
   useBoardPersistence(board);
 
   const canUndo = board.history.past.length > 0;

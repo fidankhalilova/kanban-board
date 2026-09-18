@@ -47,7 +47,7 @@ export function writePersistedBoard(snapshot: BoardSnapshot) {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
   } catch {
-    console.log("Quota exceeded")
+    console.log("QUOTA EXCEEDED")
   }
 }
 
@@ -56,17 +56,12 @@ export function clearPersistedBoard() {
   window.localStorage.removeItem(STORAGE_KEY);
 }
 
-export function loadInitialBoard(): BoardState {
-  const persisted = readPersistedBoard();
-  const snapshot = persisted ?? {
+export function createDefaultBoardState(): BoardState {
+  return {
     version: initialBoard.version,
     columnOrder: initialBoard.columnOrder,
     columns: initialBoard.columns,
     cards: initialBoard.cards,
-  };
-
-  return {
-    ...snapshot,
     history: { past: [], future: [] },
   };
 }

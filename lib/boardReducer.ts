@@ -147,6 +147,12 @@ export function boardReducer(
   state: BoardState,
   action: BoardAction,
 ): BoardState {
+    if (action.type === "HYDRATE_BOARD") {
+      return {
+        ...action.snapshot,
+        history: { past: [], future: [] },
+      };
+    }
   if (action.type === "UNDO") {
     const { past, future } = state.history;
     if (past.length === 0) return state;

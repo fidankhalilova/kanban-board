@@ -43,5 +43,6 @@ export type BoardAction =
       toIndex: number;
     }
   | { type: "SET_WIP_LIMIT"; columnId: string; wipLimit: number | null }
+  | { type: "HYDRATE_BOARD"; snapshot: BoardSnapshot }
   | { type: "UNDO" }
   | { type: "REDO" };
